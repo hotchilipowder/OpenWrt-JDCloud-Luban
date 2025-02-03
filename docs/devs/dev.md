@@ -20,6 +20,13 @@ GOARCH=mipsle GOMIPS=softfloat GOOS=linux CGO_ENABLED=0 go build -trimpath -ldfl
 see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
 
 
+# TODO List
+
++ [ ] 2025-02-03 wifi目前测试还有bug
++ [x] remove aof
+
+
+
 
 ## Useful Links:
 
