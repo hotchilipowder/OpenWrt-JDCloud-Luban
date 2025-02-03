@@ -45,3 +45,15 @@ see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
 3. 使用Tproxy模式，但是无法用Wifi
 
 
+## 添加Sing-box的时机
+
+```bash
+curl -OL https://github.com/hotchilipowder/sing-box/releases/download/binary-linux_mipsle_softfloat/sing-box
+chmod +x sing-box
+mv sing-box /usr/bin/sing-box
+
+```
+
+建议还是安装完成后手动去安装一下吧。
+
+
