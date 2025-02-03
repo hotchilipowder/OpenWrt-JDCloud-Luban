@@ -21,6 +21,11 @@ see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
 
 
 
+# TODO List
+
++ [ ] 2025-02-03 wifi目前测试还有bug
+
+
 
 
 ## Useful Links:
@@ -29,12 +34,14 @@ see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
 + https://memo.xuchen.wang/archives/144.html
 + https://github.com/yichya/openwrt-xray/issues/3
 + https://www.right.com.cn/forum/thread-8387992-1-1.html
++ https://blog.eiko.me/2023/12/24/install-sing-box-on-openwrt
++ https://www.aprdec.top/openwrt-%E4%BD%BF%E7%94%A8sing-boxtun%E6%A8%A1%E5%BC%8F%E8%BF%9B%E8%A1%8C%E8%B7%AF%E7%94%B1%E4%BB%A3%E7%90%86/[
 
+## What I have tried
 
-What I have tried
------------------
-
-1.   
-1. 试过了在一个没有安装如下的系统上进行
+1. 编译一个可以MT7621AT用的版本。
+1. 试过了在一个没有安装 `kmod-inet-diag kmod-netlink-diag kmod-tun iptables-nft` 的系统上进行,
+2. 使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。
+3. 使用Tproxy模式，但是无法用Wifi
 
 
