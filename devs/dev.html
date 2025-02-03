@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>How to include sbox - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="prev" title="DevLogs" href="../index.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="How to include sbox"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>OpenWrt-JDCloud-Luban</strong>
+    </a>
+    <div class="sy-head-nav" id="HeadNav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="搜索" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="切换到亮色模式"
+data-aria-light="切换到暗色模式"
+data-aria-dark="切换到自动模式">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="HeadNav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to include sbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#todo-list">TODO List</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>该页内容</h3><ul>
+<li><a class="reference internal" href="#">How to include sbox</a></li>
+<li><a class="reference internal" href="#todo-list">TODO List</a><ul>
+<li><a class="reference internal" href="#useful-links">Useful Links:</a></li>
+<li><a class="reference internal" href="#what-i-have-tried">What I have tried</a></li>
+</ul>
+</li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">OpenWrt-JDCloud-Luban</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">How to include sbox</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="how-to-include-sbox">
+<h1>How to include sbox<a class="headerlink" href="#how-to-include-sbox" title="Link to this heading">¶</a></h1>
+<p>鲁班的CPU是 MT7621AT+512M运存。
+官方的配置不包括, 需要自己编译。</p>
+<blockquote>
+<div><p>linux-mipsle-softfloat，linux-mipsle-hardfloat
+着两个都行，
+一个是硬件运算，另一个是软件运算</p>
+</div></blockquote>
+<blockquote>
+<div><p>你只能选择 linux-mipsle-softfloat
+MT7621 没有硬件浮点计算的指令集</p>
+</div></blockquote>
+<p>添加了相关的github脚本，可以成功的编译，然后看到可以用 <code class="docutils literal notranslate"><span class="pre">upx</span></code>，继续尝试。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">GOARCH</span><span class="o">=</span><span class="n">mipsle</span> <span class="n">GOMIPS</span><span class="o">=</span><span class="n">softfloat</span> <span class="n">GOOS</span><span class="o">=</span><span class="n">linux</span> <span class="n">CGO_ENABLED</span><span class="o">=</span><span class="mi">0</span> <span class="n">go</span> <span class="n">build</span> <span class="o">-</span><span class="n">trimpath</span> <span class="o">-</span><span class="n">ldflags</span> <span class="s1">&#39;-X &quot;github.com/sagernet/sing-box/constant.Version=${{ needs.calculate_version.outputs.version }}&quot; -s -buildid=&#39;</span> <span class="o">-</span><span class="n">tags</span> <span class="s2">&quot;with_gvisor with_quic with_dhcp with_ech with_utls with_reality_server with_clash_api&quot;</span> <span class="o">-</span><span class="n">o</span> <span class="n">dist</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span> <span class="o">./</span><span class="n">cmd</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span>
+</span></pre></div>
+</div>
+<p>see <a class="reference external" href="https://github.com/hotchilipowder/sing-box">my sing-box for 7621</a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="todo-list">
+<h1>TODO List<a class="headerlink" href="#todo-list" title="Link to this heading">¶</a></h1>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 2025-02-03 wifi目前测试还有bug</p></li>
+</ul>
+<section id="useful-links">
+<h2>Useful Links:<a class="headerlink" href="#useful-links" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/qichiyuhub/EasySingbox">https://github.com/qichiyuhub/EasySingbox</a></p></li>
+<li><p><a class="reference external" href="https://memo.xuchen.wang/archives/144.html">https://memo.xuchen.wang/archives/144.html</a></p></li>
+<li><p><a class="reference external" href="https://github.com/yichya/openwrt-xray/issues/3">https://github.com/yichya/openwrt-xray/issues/3</a></p></li>
+<li><p><a class="reference external" href="https://www.right.com.cn/forum/thread-8387992-1-1.html">https://www.right.com.cn/forum/thread-8387992-1-1.html</a></p></li>
+<li><p><a class="reference external" href="https://blog.eiko.me/2023/12/24/install-sing-box-on-openwrt">https://blog.eiko.me/2023/12/24/install-sing-box-on-openwrt</a></p></li>
+<li><p><a class="reference external" href="https://www.aprdec.top/openwrt-%E4%BD%BF%E7%94%A8sing-boxtun%E6%A8%A1%E5%BC%8F%E8%BF%9B%E8%A1%8C%E8%B7%AF%E7%94%B1%E4%BB%A3%E7%90%86/">https://www.aprdec.top/openwrt-使用sing-boxtun模式进行路由代理/</a>[</p></li>
+</ul>
+</section>
+<section id="what-i-have-tried">
+<h2>What I have tried<a class="headerlink" href="#what-i-have-tried" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>编译一个可以MT7621AT用的版本。</p></li>
+<li><p>试过了在一个没有安装 <code class="docutils literal notranslate"><span class="pre">kmod-inet-diag</span> <span class="pre">kmod-netlink-diag</span> <span class="pre">kmod-tun</span> <span class="pre">iptables-nft</span></code> 的系统上进行,</p></li>
+<li><p>使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。</p></li>
+<li><p>使用Tproxy模式，但是无法用Wifi</p></li>
+</ol>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>回到顶部</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>上一章</span><div class="title">首页</div></div>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, hotchilipowder</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=a1b8b494"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+</html>
