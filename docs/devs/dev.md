@@ -57,3 +57,24 @@ mv sing-box /usr/bin/sing-box
 建议还是安装完成后手动去安装一下吧。
 
 
+
+## 断电重启丢配置
+
+initramfs-kernel.bin是挂载到内存的，断电自然就丢失配置了.为什么我的配置里面没有 sysupgrade.bin?
+
+
+## 进入github action进行一些尝试
+
+`make menuconfig` 试一下。
+
+添加
+
+```
+    - uses: actions/checkout@v2
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+
+```
+
+然后就可以通过ssh的方式登陆到线上环境中。
+

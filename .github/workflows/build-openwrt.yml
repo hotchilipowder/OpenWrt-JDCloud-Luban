@@ -7,7 +7,7 @@ on:
     inputs:
       ssh:
         description: 'SSH connection to Actions'
-        required: false
+        required: true
         default: 'false'
   push:
     branches:
@@ -87,6 +87,8 @@ jobs:
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
+
+
       
     - name: Download package
       id: package
@@ -113,6 +115,10 @@ jobs:
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
+
+    # - uses: actions/checkout@v2
+    # - name: Setup upterm session
+    #   uses: lhotari/action-upterm@v1
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
