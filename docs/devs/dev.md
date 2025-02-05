@@ -39,10 +39,10 @@ see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
 
 ## What I have tried
 
-1. 编译一个可以MT7621AT用的版本。
-1. 试过了在一个没有安装 `kmod-inet-diag kmod-netlink-diag kmod-tun iptables-nft` 的系统上进行,
-2. 使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。
-3. 使用Tproxy模式，但是无法用Wifi
++ [x] 编译一个可以MT7621AT用的版本。see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
++ [x] 在一个没有安装 `kmod-inet-diag kmod-netlink-diag kmod-tun iptables-nft` 的系统上进行,结论是 `kmod-tun kmod-inet-diag kmod-netlink-diag`是需要的。
++ [x] 使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。最后最简单的结论就是 需要设置 auto`"auto_detect_interface": true`
++ [x] 使用Tproxy模式，但是无法用Wifi, 不过我感觉规则经常写错不太work...
 
 
 ## 添加Sing-box的时机
