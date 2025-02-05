@@ -77,6 +77,9 @@ data-aria-dark="切换到自动模式">
 <li><a class="reference internal" href="#todo-list">TODO List</a><ul>
 <li><a class="reference internal" href="#useful-links">Useful Links:</a></li>
 <li><a class="reference internal" href="#what-i-have-tried">What I have tried</a></li>
+<li><a class="reference internal" href="#sing-box">添加Sing-box的时机</a></li>
+<li><a class="reference internal" href="#id1">断电重启丢配置</a></li>
+<li><a class="reference internal" href="#github-action">进入github action进行一些尝试</a></li>
 </ul>
 </li>
 </ul>
@@ -146,12 +149,37 @@ MT7621 没有硬件浮点计算的指令集</p>
 </section>
 <section id="what-i-have-tried">
 <h2>What I have tried<a class="headerlink" href="#what-i-have-tried" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>编译一个可以MT7621AT用的版本。</p></li>
-<li><p>试过了在一个没有安装 <code class="docutils literal notranslate"><span class="pre">kmod-inet-diag</span> <span class="pre">kmod-netlink-diag</span> <span class="pre">kmod-tun</span> <span class="pre">iptables-nft</span></code> 的系统上进行,</p></li>
-<li><p>使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。</p></li>
-<li><p>使用Tproxy模式，但是无法用Wifi</p></li>
-</ol>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> 编译一个可以MT7621AT用的版本。see <a class="reference external" href="https://github.com/hotchilipowder/sing-box">my sing-box for 7621</a></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> 在一个没有安装 <code class="docutils literal notranslate"><span class="pre">kmod-inet-diag</span> <span class="pre">kmod-netlink-diag</span> <span class="pre">kmod-tun</span> <span class="pre">iptables-nft</span></code> 的系统上进行,结论是 <code class="docutils literal notranslate"><span class="pre">kmod-tun</span> <span class="pre">kmod-inet-diag</span> <span class="pre">kmod-netlink-diag</span></code>是需要的。</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> 使用Tun模式，无法出去，已经尝试了各种防火墙设置，无效。最后最简单的结论就是 需要设置 auto<code class="docutils literal notranslate"><span class="pre">&quot;auto_detect_interface&quot;:</span> <span class="pre">true</span></code></p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> 使用Tproxy模式，但是无法用Wifi, 不过我感觉规则经常写错不太work…</p></li>
+</ul>
+</section>
+<section id="sing-box">
+<h2>添加Sing-box的时机<a class="headerlink" href="#sing-box" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">curl<span class="w"> </span>-OL<span class="w"> </span>https://github.com/hotchilipowder/sing-box/releases/download/binary-linux_mipsle_softfloat/sing-box
+</span><span data-line="2">chmod<span class="w"> </span>+x<span class="w"> </span>sing-box
+</span><span data-line="3">mv<span class="w"> </span>sing-box<span class="w"> </span>/usr/bin/sing-box
+</span></pre></div>
+</div>
+<p>建议还是安装完成后手动去安装一下吧。</p>
+</section>
+<section id="id1">
+<h2>断电重启丢配置<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>initramfs-kernel.bin是挂载到内存的，断电自然就丢失配置了.为什么我的配置里面没有 sysupgrade.bin?</p>
+</section>
+<section id="github-action">
+<h2>进入github action进行一些尝试<a class="headerlink" href="#github-action" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">menuconfig</span></code> 试一下。</p>
+<p>添加</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">    <span class="o">-</span> <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">checkout</span><span class="nd">@v2</span>
+</span><span data-line="2">    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Setup</span> <span class="n">upterm</span> <span class="n">session</span>
+</span><span data-line="3">      <span class="n">uses</span><span class="p">:</span> <span class="n">lhotari</span><span class="o">/</span><span class="n">action</span><span class="o">-</span><span class="n">upterm</span><span class="nd">@v1</span>
+</span><span data-line="4">
+</span></pre></div>
+</div>
+<p>然后就可以通过ssh的方式登陆到线上环境中。</p>
 </section>
 </section>
 
