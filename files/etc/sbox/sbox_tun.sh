@@ -2,6 +2,7 @@
 # sing-box monitor
 
 SERVICE_NAME="sing-box"
+SBOX_DIR="/tmp/sing-box"
 SBOX_PATH="/tmp/sing-box/sing-box"
 SBOX_CONFIG_PATH="/tmp/sing-box/config.json"
 SBOX_CONFIG_PATH_NEW="/tmp/sing-box/config-new.json"
@@ -13,6 +14,8 @@ error_exit() {
     echo "$(date) Error: $1" >&2
     exit "${2:-1}"
 }
+
+mkdir -p $SBOX_DIR
 
 # no SBOX
 if [ ! -f "$SBOX_PATH" ]; then
@@ -29,10 +32,15 @@ if ! pgrep -f "${SERVICE_NAME}" > /dev/null; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - ${SERVICE_NAME} to start" 
     /etc/init.d/${SERVICE_NAME} start
 else
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ${SERVICE_NAME} Downloading config" 
-    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
-    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ${SERVICE_NAME} to reload" 
-    /etc/init.d/${SERVICE_NAME} reload
+    current_hour=$(date +%H)
+    if [ "$current_hour" -ge 1 ] && [ "$current_hour" -lt 2 ]; then
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - ${SERVICE_NAME} 1am and 2am, reload" 
+        wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
+        mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - ${SERVICE_NAME} reload" 
+        /etc/init.d/${SERVICE_NAME} reload
+    else
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Skipping"
+    fi
 fi
 
