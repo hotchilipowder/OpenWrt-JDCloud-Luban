@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SBOX的一些配置注释 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"auto");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    <meta property="og:type" content="website"/><meta property="og:title" content="SBOX的一些配置注释"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      
+      
+      <strong>OpenWrt-JDCloud-Luban</strong>
+    </a>
+    <div class="sy-head-nav" id="HeadNav">
+      <nav class="sy-head-links"></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="搜索" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials"></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="切换到亮色模式"
+data-aria-light="切换到暗色模式"
+data-aria-dark="切换到自动模式">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="HeadNav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2 -translate-x-2"></span>
+          <span class="hamburger_3 -translate-x-1"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">How to include sbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html#todo-list">TODO List</a></li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>该页内容</h3><ul>
+<li><a class="reference internal" href="#tun">Tun</a><ul>
+<li><a class="reference internal" href="#id1">&#23433;&#35013;&#27493;&#39588;</a></li>
+<li><a class="reference internal" href="#issues">Issues</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tproxy">Tproxy</a><ul>
+<li><a class="reference internal" href="#id2">&#23433;&#35013;&#27493;&#39588;</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">OpenWrt-JDCloud-Luban</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">SBOX的一些配置注释</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="sbox">
+<h1>SBOX的一些配置注释<a class="headerlink" href="#sbox" title="Link to this heading">¶</a></h1>
+<section id="tun">
+<h2>Tun<a class="headerlink" href="#tun" title="Link to this heading">¶</a></h2>
+<p>使用Tun模式配置简单，只需要配置 <code class="docutils literal notranslate"><span class="pre">/etc/config/network</span></code> 和 <code class="docutils literal notranslate"><span class="pre">/etc/config/firewall</span></code> 即可。
+然后在 /tmp/sing-box里面下载文件，启动 <code class="docutils literal notranslate"><span class="pre">/tmp/sing-box/sing-box</span> <span class="pre">run</span> <span class="pre">-c</span> <span class="pre">/tmp/sing-box/config.json</span></code> 即可。</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p><code class="docutils literal notranslate"><span class="pre">/tmp</span></code>一般是挂在到内存中的，使用 tmpfs 文件系统。
+tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的存储空间在VM(virtual memory)里面,VM是由linux内核里面的vm子系统管理，现在大多数操作系统都采用了虚拟内存管理机制。</p>
+<p>使用tmpfs设备（内存）挂载到 /tmp目录，
+主要是为了让log之类的散碎文件在内存中读写，
+一是加快速度，二是减小对flash/tf/emmc/hdd等存储设备的读写…</p>
+</div>
+<p>因此，需要编写一个脚本，能够定时的检测是否挂掉了, 并且更新配置。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">#!/bin/sh
+</span><span data-line="2"># sing-box monitor
+</span><span data-line="3">
+</span><span data-line="4">SERVICE_NAME=&quot;sing-box&quot;
+</span><span data-line="5">SBOX_PATH=&quot;/tmp/sing-box/sing-box&quot;
+</span><span data-line="6">SBOX_CONFIG_PATH=&quot;/tmp/sing-box/config.json&quot;
+</span><span data-line="7">SBOX_CONFIG_PATH_NEW=&quot;/tmp/sing-box/config-new.json&quot;
+</span><span data-line="8">
+</span><span data-line="9">SBOX_URL=&quot;https://github.com/hotchilipowder/sing-box/releases/download/binary-linux_mipsle_softfloat/sing-box&quot;
+</span><span data-line="10">SBOX_CONFIG_URL=&quot;&quot;
+</span><span data-line="11">
+</span><span data-line="12">error_exit() {
+</span><span data-line="13">    echo &quot;$(date) Error: $1&quot; &gt;&amp;2
+</span><span data-line="14">    exit &quot;${2:-1}&quot;
+</span><span data-line="15">}
+</span><span data-line="16">
+</span><span data-line="17"># no SBOX
+</span><span data-line="18">if [ ! -f &quot;$SBOX_PATH&quot; ]; then
+</span><span data-line="19">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} not found&quot;
+</span><span data-line="20">
+</span><span data-line="21">    wget --no-check-certificate -O $SBOX_PATH $SBOX_URL 
+</span><span data-line="22">    chmod +x $SBOX_PATH
+</span><span data-line="23">fi
+</span><span data-line="24">
+</span><span data-line="25"># not start
+</span><span data-line="26">if ! pgrep -f &quot;${SERVICE_NAME}&quot; &gt; /dev/null; then
+</span><span data-line="27">    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
+</span><span data-line="28">    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
+</span><span data-line="29">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} to start&quot; 
+</span><span data-line="30">    /etc/init.d/${SERVICE_NAME} start
+</span><span data-line="31">else
+</span><span data-line="32">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} Downloading config&quot; 
+</span><span data-line="33">    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
+</span><span data-line="34">    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
+</span><span data-line="35">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} to reload&quot; 
+</span><span data-line="36">    /etc/init.d/${SERVICE_NAME} reload
+</span><span data-line="37">fi
+</span><span data-line="38">
+</span></pre></div>
+</div>
+<section id="id1">
+<h3>安装步骤<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>使用本固件，很多的默认配置已经完成了，因此不需要再配置 接口和防火墙了 （如果需要配置，查看 References)</p>
+<p>需要添加的配置：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/sbox/sbox_tun.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">SBOX_URL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/sbox/sbox_tun.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">SBOX_CONFIG_URL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/crontabs/root</span></code> 中启用 <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">1</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">sh</span> <span class="pre">/etc/sbox/sbox_tun.sh</span></code> (删除 <code class="docutils literal notranslate"><span class="pre">#</span></code>， 这样就会每天1点更新, 使用 <code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-l</span></code> 查看是否生效)</p></li>
+<li><p>添加开机脚本：<code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">/etc/sbox/sbox_tun.sh</span></code> (为了确保开机后运行)</p></li>
+</ol>
+</section>
+<section id="issues">
+<h3>Issues<a class="headerlink" href="#issues" title="Link to this heading">¶</a></h3>
+<p>但是这个Tun模式有一个核心的问题，以MTK7961A为例，只能跑到20Mbps左右，并且由于所有的流量都走tun，所以直连的速度也起不来。</p>
+<p>而大哥亚瑟虽然变强了很多，IPQ6000，但是仍然只能跑到100Mbps，这简直无法用啊。遂放弃，改用Tproxy。</p>
+</section>
+</section>
+<section id="tproxy">
+<h2>Tproxy<a class="headerlink" href="#tproxy" title="Link to this heading">¶</a></h2>
+<p>使用Tproxy的最大问题就是需要配置 nftables 或者 iptables.</p>
+<p>查看了References的一些配置，完成了如下的两个文件，可以实现。</p>
+<p>为了减少复杂配置，所以就不去修改 <code class="docutils literal notranslate"><span class="pre">/etc/init.d/sing-box</span></code> 中的配置了，而是修改 <code class="docutils literal notranslate"><span class="pre">sbox_tproxy.sh</span></code>文件，将上述两个网络操作的脚本放到监控脚本中执行。</p>
+<section id="id2">
+<h3>安装步骤<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>需要添加的配置：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/sbox/sbox_tproxy.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">SBOX_URL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/sbox/sbox_tproxy.sh</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">SBOX_CONFIG_URL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/crontabs/root</span></code> 中启用 <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">1</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">sh</span> <span class="pre">/etc/sbox/sbox_tproxy.sh</span></code> (删除 <code class="docutils literal notranslate"><span class="pre">#</span></code>， 这样就会每天1点更新, 使用 <code class="docutils literal notranslate"><span class="pre">crontab</span> <span class="pre">-l</span></code> 查看是否生效)</p></li>
+<li><p>添加开机脚本：<code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">/etc/sbox/sbox_tproxy.sh</span></code> (为了确保开机后运行, 也可以 <code class="docutils literal notranslate"><span class="pre">sleep</span> <span class="pre">100</span></code> 然后再执行 <code class="docutils literal notranslate"><span class="pre">sh</span> <span class="pre">/etc/sbox/sbox_tproxy.sh</span></code>)</p></li>
+</ol>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://www.aprdec.top/openwrt-%E4%BD%BF%E7%94%A8sing-boxtun%E6%A8%A1%E5%BC%8F%E8%BF%9B%E8%A1%8C%E8%B7%AF%E7%94%B1%E4%BB%A3%E7%90%86/">(tun模式)进行路由代理</a></p></li>
+<li><p><a class="reference external" href="https://www.right.com.cn/forum/thread-8387992-1-1.html">Tproxy代理-恩山</a></p></li>
+<li><p><a class="reference external" href="https://www.right.com.cn/forum/thread-8387992-1-1.html">tun代理-恩山</a></p></li>
+<li><p><a class="reference external" href="https://github.com/qichiyuhub/EasySingbox">Sing-box自动订阅运行脚本</a></p></li>
+</ol>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>回到顶部</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright"><p>2025, hotchilipowder</p>
+  
+  <p>
+    Made with
+    
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
+    
+    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
+  </p>
+</div>
+      <div class="sy-foot-socials"></div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=a1b8b494"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+</html>
