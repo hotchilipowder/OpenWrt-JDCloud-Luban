@@ -2,7 +2,7 @@
 <html lang="zh" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SBOX的一些配置注释 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SBOX的一些配置注释 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="prev" title="How to include sbox" href="dev.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
@@ -58,9 +58,9 @@ data-aria-dark="切换到自动模式">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="dev.html">How to include sbox</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dev.html#todo-list">TODO List</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SBOX的一些配置注释</a></li>
 </ul>
 
         </div>
@@ -188,6 +188,111 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
 <h2>Tproxy<a class="headerlink" href="#tproxy" title="Link to this heading">¶</a></h2>
 <p>使用Tproxy的最大问题就是需要配置 nftables 或者 iptables.</p>
 <p>查看了References的一些配置，完成了如下的两个文件，可以实现。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">#!/bin/sh
+</span><span data-line="2">
+</span><span data-line="3">TPROXY_PORT=9898  
+</span><span data-line="4">PROXY_FWMARK=1
+</span><span data-line="5">PROXY_ROUTE_TABLE=100
+</span><span data-line="6">
+</span><span data-line="7">
+</span><span data-line="8">echo &quot;$(date) Creating firewall...&quot;
+</span><span data-line="9">cat &gt; /etc/nftables.d/99-singbox.nft &lt;&lt; EOF
+</span><span data-line="10">#!/usr/sbin/nft -f
+</span><span data-line="11">
+</span><span data-line="12">add table inet sing-box
+</span><span data-line="13">
+</span><span data-line="14"># Create new chain
+</span><span data-line="15">add chain inet sing-box prerouting { type filter hook prerouting priority mangle; policy accept; }
+</span><span data-line="16">add chain inet sing-box output { type route hook output priority mangle; policy accept; }
+</span><span data-line="17">
+</span><span data-line="18"># Add rules
+</span><span data-line="19">table inet sing-box {
+</span><span data-line="20">    chain prerouting {
+</span><span data-line="21">        # Make sure DHCP is not filter by UDP 67/68
+</span><span data-line="22">        udp dport { 67, 68 } accept comment &quot;Allow DHCP traffic&quot;
+</span><span data-line="23">        # Make sure DNS and TProxy work
+</span><span data-line="24">        meta l4proto { tcp, udp } th dport 53 tproxy to :$TPROXY_PORT accept comment &quot;DNS Transparent Proxy&quot;
+</span><span data-line="25">        fib daddr type local meta l4proto { tcp, udp } th dport $TPROXY_PORT reject
+</span><span data-line="26">        fib daddr type local accept
+</span><span data-line="27">        # Bypass local Networks
+</span><span data-line="28">        ip daddr { 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16 } accept
+</span><span data-line="29">        ip6 daddr { ::1, fc00::/7, fe80::/10 } accept
+</span><span data-line="30">        # Bypass DNAT
+</span><span data-line="31">        ct status dnat accept comment &quot;Allow forwarded traffic&quot;
+</span><span data-line="32">        # Mark others to Tproxy
+</span><span data-line="33">        meta l4proto { tcp, udp } tproxy to :$TPROXY_PORT meta mark set 0x1 accept
+</span><span data-line="34">        meta l4proto { tcp, udp } th dport { 80, 443 } tproxy to :$TPROXY_PORT meta mark set 0x1 accept
+</span><span data-line="35">    }
+</span><span data-line="36">
+</span><span data-line="37">    chain output {
+</span><span data-line="38">        # Bypass marked traffic
+</span><span data-line="39">        meta mark 0x1 accept
+</span><span data-line="40">        # Make sure DNS work
+</span><span data-line="41">        meta l4proto { tcp, udp } th dport 53 meta mark set 0x1 accept
+</span><span data-line="42">        # Bypass local traffic
+</span><span data-line="43">        ip daddr { 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16 } accept
+</span><span data-line="44">        ip6 daddr { ::1, fc00::/7, fe80::/10 } accept
+</span><span data-line="45">        # Bypass DNAT
+</span><span data-line="46">        ct status dnat accept comment &quot;Allow forwarded traffic&quot;
+</span><span data-line="47">        # Mark others to Tproxy
+</span><span data-line="48">        meta l4proto { tcp, udp } meta mark set 0x1 accept
+</span><span data-line="49">    }
+</span><span data-line="50">}
+</span><span data-line="51">EOF
+</span><span data-line="52">
+</span><span data-line="53"># Set privilege for nft
+</span><span data-line="54">chmod 644 /etc/nftables.d/99-singbox.nft
+</span><span data-line="55">
+</span><span data-line="56"># Apply firewall rules
+</span><span data-line="57">if ! nft -f /etc/nftables.d/99-singbox.nft; then
+</span><span data-line="58">    error_exit &quot;Apply firewall failure&quot;
+</span><span data-line="59">fi
+</span><span data-line="60">
+</span><span data-line="61">ip rule del table $PROXY_ROUTE_TABLE &gt;/dev/null 2&gt;&amp;1  
+</span><span data-line="62">ip rule add fwmark $PROXY_FWMARK table $PROXY_ROUTE_TABLE
+</span><span data-line="63">ip rule del table $PROXY_ROUTE_TABLE &gt;/dev/null 2&gt;&amp;1  
+</span><span data-line="64">ip rule add fwmark $PROXY_FWMARK table $PROXY_ROUTE_TABLE
+</span><span data-line="65">
+</span><span data-line="66">ip route flush table $PROXY_ROUTE_TABLE &gt;/dev/null 2&gt;&amp;1
+</span><span data-line="67">ip route add local default dev lo table $PROXY_ROUTE_TABLE
+</span><span data-line="68">
+</span><span data-line="69">ip -6 rule del table $PROXY_ROUTE_TABLE &gt;/dev/null 2&gt;&amp;1  
+</span><span data-line="70">ip -6 rule add fwmark $PROXY_FWMARK table $PROXY_ROUTE_TABLE
+</span><span data-line="71">
+</span><span data-line="72">ip -6 route flush table $PROXY_ROUTE_TABLE &gt;/dev/null 2&gt;&amp;1
+</span><span data-line="73">ip -6 route add local default dev lo table $PROXY_ROUTE_TABLE
+</span><span data-line="74">
+</span><span data-line="75">echo &quot;$(date) Ready for sing-box&quot;
+</span><span data-line="76">
+</span><span data-line="77">
+</span></pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="ch">#!/bin/sh</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">timestamp</span><span class="p">()</span> <span class="p">{</span>
+</span><span data-line="4">    <span class="n">date</span> <span class="o">+</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span>
+</span><span data-line="5"><span class="p">}</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="n">error_exit</span><span class="p">()</span> <span class="p">{</span>
+</span><span data-line="8">    <span class="n">echo</span> <span class="s2">&quot;$(timestamp) Error: $1&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+</span><span data-line="9">    <span class="n">exit</span> <span class="s2">&quot;$</span><span class="si">{2:-1}</span><span class="s2">&quot;</span>
+</span><span data-line="10"><span class="p">}</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="n">trap</span> <span class="s1">&#39;error_exit &quot;Script Interrupt&quot;&#39;</span> <span class="n">INT</span> <span class="n">TERM</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nftables</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">99</span><span class="o">-</span><span class="n">singbox</span><span class="o">.</span><span class="n">nft</span> <span class="o">&amp;&amp;</span> <span class="n">echo</span> <span class="s2">&quot;$(timestamp) Delete rule&quot;</span>
+</span><span data-line="15">
+</span><span data-line="16"><span class="n">nft</span> <span class="n">delete</span> <span class="n">table</span> <span class="n">inet</span> <span class="n">sing</span><span class="o">-</span><span class="n">box</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="n">echo</span> <span class="s2">&quot;$(timestamp) delete sing-box table&quot;</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="n">ip</span> <span class="n">rule</span> <span class="k">del</span> <span class="n">fwmark</span> <span class="mi">1</span> <span class="n">table</span> <span class="mi">100</span> <span class="mi">2</span><span class="o">&gt;/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span> <span class="o">&amp;&amp;</span> <span class="n">echo</span> <span class="s2">&quot;$(timestamp) delete rule&quot;</span>
+</span><span data-line="19"><span class="n">ip</span> <span class="n">route</span> <span class="n">flush</span> <span class="n">table</span> <span class="mi">100</span> <span class="o">&amp;&amp;</span> <span class="n">echo</span> <span class="s2">&quot;$(timestamp) delete rule&quot;</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sing</span><span class="o">-</span><span class="n">box</span><span class="o">/</span><span class="n">cache</span><span class="o">.</span><span class="n">db</span> <span class="o">&amp;&amp;</span> <span class="n">echo</span> <span class="s2">&quot;$(timestamp) clean cache&quot;</span>
+</span><span data-line="22">
+</span><span data-line="23"><span class="n">echo</span> <span class="s2">&quot;$(timestamp) Uninstall for sing-box&quot;</span>
+</span><span data-line="24">
+</span></pre></div>
+</div>
 <p>为了减少复杂配置，所以就不去修改 <code class="docutils literal notranslate"><span class="pre">/etc/init.d/sing-box</span></code> 中的配置了，而是修改 <code class="docutils literal notranslate"><span class="pre">sbox_tproxy.sh</span></code>文件，将上述两个网络操作的脚本放到监控脚本中执行。</p>
 <section id="id2">
 <h3>安装步骤<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
@@ -216,7 +321,13 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
     <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
   </svg>
   <span>回到顶部</span>
-</button><div class="navigation flex print:hidden"></div></div>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="dev.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>上一章</span><div class="title">How to include sbox</div></div>
+    </a>
+  </div></div></div>
     </div>
   </main>
 </div>

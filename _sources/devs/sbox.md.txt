@@ -49,10 +49,10 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
 
 查看了References的一些配置，完成了如下的两个文件，可以实现。
 
-```{literalinclude} ../../files/ect/sbox/sbox_tproxy_start.sh
+```{literalinclude} ../../files/etc/sbox/sbox_tproxy_start.sh
 ```
 
-```{literalinclude} ../../files/ect/sbox/sbox_tproxy_stop.sh
+```{literalinclude} ../../files/etc/sbox/sbox_tproxy_stop.sh
 ```
 
 为了减少复杂配置，所以就不去修改 `/etc/init.d/sing-box` 中的配置了，而是修改 `sbox_tproxy.sh`文件，将上述两个网络操作的脚本放到监控脚本中执行。
