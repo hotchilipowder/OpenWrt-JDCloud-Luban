@@ -1,4 +1,22 @@
-# How to include sbox
+
+## 逻辑
+
+开机启动 `/etc/rc.local`，主要包括 `/etc/frp-client/frp-client.sh`和`/etc/sbox/sbox_tproxy.sh`
+两个文件。
+
+也需要修改这两个文件即可。
+
+此外，也应该取消掉注释 
+
+```bash
+crontab -e
+
+```
+
+
+
+
+## How to include sbox
 
 鲁班的CPU是 MT7621AT+512M运存。
 官方的配置不包括, 需要自己编译。
@@ -18,6 +36,13 @@ GOARCH=mipsle GOMIPS=softfloat GOOS=linux CGO_ENABLED=0 go build -trimpath -ldfl
 ```
 
 see [my sing-box for 7621](https://github.com/hotchilipowder/sing-box)
+
+
+# TODO List
+
++ [ ] 2025-02-03 wifi目前测试还有bug
++ [x] remove aof
+
 
 
 

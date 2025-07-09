@@ -2,11 +2,11 @@
 <html lang="zh" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>How to include sbox - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="SBOX的一些配置注释" href="sbox.html" /><link rel="prev" title="DevLogs" href="../index.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>逻辑 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="SBOX的一些配置注释" href="sbox.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d0008d65" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
@@ -20,7 +20,7 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta property="og:type" content="website"/><meta property="og:title" content="How to include sbox"/>
+    <meta property="og:type" content="website"/><meta property="og:title" content="逻辑"/>
 <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -59,7 +59,9 @@ data-aria-dark="切换到自动模式">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How to include sbox</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">逻辑</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#how-to-include-sbox">How to include sbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#todo-list">TODO List</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sbox.html">SBOX的一些配置注释</a></li>
 </ul>
 
@@ -73,16 +75,22 @@ data-aria-dark="切换到自动模式">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>该页内容</h3><ul>
+<li><a class="reference internal" href="#">逻辑</a></li>
+<li><a class="reference internal" href="#how-to-include-sbox">How to include sbox</a></li>
+<li><a class="reference internal" href="#todo-list">TODO List</a><ul>
 <li><a class="reference internal" href="#useful-links">Useful Links:</a></li>
 <li><a class="reference internal" href="#what-i-have-tried">What I have tried</a></li>
-<li><a class="reference internal" href="#sing-box">&#28155;&#21152;Sing-box&#30340;&#26102;&#26426;</a></li>
-<li><a class="reference internal" href="#id1">&#26029;&#30005;&#37325;&#21551;&#20002;&#37197;&#32622;</a></li>
-<li><a class="reference internal" href="#github-action">&#36827;&#20837;github action&#36827;&#34892;&#19968;&#20123;&#23581;&#35797;</a></li>
+<li><a class="reference internal" href="#sing-box">添加Sing-box的时机</a></li>
+<li><a class="reference internal" href="#id2">断电重启丢配置</a></li>
+<li><a class="reference internal" href="#github-action">进入github action进行一些尝试</a></li>
+</ul>
+</li>
 </ul>
 </div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
-  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
   <div class="sy-breadcrumbs-inner flex items-center">
     <div class="md:hidden mr-3">
       <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
@@ -94,7 +102,7 @@ data-aria-dark="切换到自动模式">
         <span>/</span>
         <meta itemprop="position" content="1" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">How to include sbox</strong>
+        <strong itemprop="name">逻辑</strong>
         <meta itemprop="position" content="2" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -107,7 +115,17 @@ data-aria-dark="切换到自动模式">
 </div><div class="flex flex-col break-words justify-between">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue" role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="how-to-include-sbox">
+          <section id="id1">
+<h1>逻辑<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>开机启动 <code class="docutils literal notranslate"><span class="pre">/etc/rc.local</span></code>，主要包括 <code class="docutils literal notranslate"><span class="pre">/etc/frp-client/frp-client.sh</span></code>和<code class="docutils literal notranslate"><span class="pre">/etc/sbox/sbox_tproxy.sh</span></code>
+两个文件。</p>
+<p>也需要修改这两个文件即可。</p>
+<p>此外，也应该取消掉注释</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">crontab<span class="w"> </span>-e
+</span></pre></div>
+</div>
+</section>
+<section id="how-to-include-sbox">
 <h1>How to include sbox<a class="headerlink" href="#how-to-include-sbox" title="Link to this heading">¶</a></h1>
 <p>鲁班的CPU是 MT7621AT+512M运存。
 官方的配置不包括, 需要自己编译。</p>
@@ -125,6 +143,13 @@ MT7621 没有硬件浮点计算的指令集</p>
 </span></pre></div>
 </div>
 <p>see <a class="reference external" href="https://github.com/hotchilipowder/sing-box">my sing-box for 7621</a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="todo-list">
+<h1>TODO List<a class="headerlink" href="#todo-list" title="Link to this heading">¶</a></h1>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 2025-02-03 wifi目前测试还有bug</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" checked="checked" disabled="disabled" type="checkbox"> remove aof</p></li>
+</ul>
 <section id="useful-links">
 <h2>Useful Links:<a class="headerlink" href="#useful-links" title="Link to this heading">¶</a></h2>
 <ul class="simple">
@@ -154,8 +179,8 @@ MT7621 没有硬件浮点计算的指令集</p>
 </div>
 <p>建议还是安装完成后手动去安装一下吧。</p>
 </section>
-<section id="id1">
-<h2>断电重启丢配置<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<section id="id2">
+<h2>断电重启丢配置<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <p>initramfs-kernel.bin是挂载到内存的，断电自然就丢失配置了.为什么我的配置里面没有 sysupgrade.bin?</p>
 </section>
 <section id="github-action">
@@ -218,5 +243,5 @@ MT7621 没有硬件浮点计算的指令集</p>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
-      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+      <script src="../_static/shibuya.js?v=1d2088d1"></script></body>
 </html>

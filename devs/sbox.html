@@ -2,11 +2,11 @@
 <html lang="zh" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SBOX的一些配置注释 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="prev" title="How to include sbox" href="dev.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>SBOX的一些配置注释 - OpenWrt-JDCloud-Luban 0.0.1 文档</title><link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="prev" title="逻辑" href="dev.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=10d1008b" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d0008d65" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
@@ -59,7 +59,9 @@ data-aria-dark="切换到自动模式">
       <div class="sy-scrollbar p-6">
         <div class="globaltoc" data-expand-depth="0"><p class="caption" role="heading" aria-level="3"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="dev.html">How to include sbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">逻辑</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html#how-to-include-sbox">How to include sbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html#todo-list">TODO List</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SBOX的一些配置注释</a></li>
 </ul>
 
@@ -87,7 +89,8 @@ data-aria-dark="切换到自动模式">
 </div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
-  <main class="sy-main w-full max-sm:max-w-full print:pt-6"><div class="sy-breadcrumbs" role="navigation">
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
   <div class="sy-breadcrumbs-inner flex items-center">
     <div class="md:hidden mr-3">
       <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
@@ -131,40 +134,48 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
 </span><span data-line="2"># sing-box monitor
 </span><span data-line="3">
 </span><span data-line="4">SERVICE_NAME=&quot;sing-box&quot;
-</span><span data-line="5">SBOX_PATH=&quot;/tmp/sing-box/sing-box&quot;
-</span><span data-line="6">SBOX_CONFIG_PATH=&quot;/tmp/sing-box/config.json&quot;
-</span><span data-line="7">SBOX_CONFIG_PATH_NEW=&quot;/tmp/sing-box/config-new.json&quot;
-</span><span data-line="8">
-</span><span data-line="9">SBOX_URL=&quot;https://github.com/hotchilipowder/sing-box/releases/download/binary-linux_mipsle_softfloat/sing-box&quot;
-</span><span data-line="10">SBOX_CONFIG_URL=&quot;&quot;
-</span><span data-line="11">
-</span><span data-line="12">error_exit() {
-</span><span data-line="13">    echo &quot;$(date) Error: $1&quot; &gt;&amp;2
-</span><span data-line="14">    exit &quot;${2:-1}&quot;
-</span><span data-line="15">}
-</span><span data-line="16">
-</span><span data-line="17"># no SBOX
-</span><span data-line="18">if [ ! -f &quot;$SBOX_PATH&quot; ]; then
-</span><span data-line="19">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} not found&quot;
-</span><span data-line="20">
-</span><span data-line="21">    wget --no-check-certificate -O $SBOX_PATH $SBOX_URL 
-</span><span data-line="22">    chmod +x $SBOX_PATH
-</span><span data-line="23">fi
-</span><span data-line="24">
-</span><span data-line="25"># not start
-</span><span data-line="26">if ! pgrep -f &quot;${SERVICE_NAME}&quot; &gt; /dev/null; then
-</span><span data-line="27">    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
-</span><span data-line="28">    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
-</span><span data-line="29">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} to start&quot; 
-</span><span data-line="30">    /etc/init.d/${SERVICE_NAME} start
-</span><span data-line="31">else
-</span><span data-line="32">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} Downloading config&quot; 
-</span><span data-line="33">    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
-</span><span data-line="34">    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
-</span><span data-line="35">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} to reload&quot; 
-</span><span data-line="36">    /etc/init.d/${SERVICE_NAME} reload
-</span><span data-line="37">fi
-</span><span data-line="38">
+</span><span data-line="5">SBOX_DIR=&quot;/tmp/sing-box&quot;
+</span><span data-line="6">SBOX_PATH=&quot;/tmp/sing-box/sing-box&quot;
+</span><span data-line="7">SBOX_CONFIG_PATH=&quot;/tmp/sing-box/config.json&quot;
+</span><span data-line="8">SBOX_CONFIG_PATH_NEW=&quot;/tmp/sing-box/config-new.json&quot;
+</span><span data-line="9">
+</span><span data-line="10">SBOX_URL=&quot;https://github.com/hotchilipowder/sing-box/releases/download/binary-linux_mipsle_softfloat/sing-box&quot;
+</span><span data-line="11">SBOX_CONFIG_URL=&quot;&quot;
+</span><span data-line="12">
+</span><span data-line="13">error_exit() {
+</span><span data-line="14">    echo &quot;$(date) Error: $1&quot; &gt;&amp;2
+</span><span data-line="15">    exit &quot;${2:-1}&quot;
+</span><span data-line="16">}
+</span><span data-line="17">
+</span><span data-line="18">mkdir -p $SBOX_DIR
+</span><span data-line="19">
+</span><span data-line="20"># no SBOX
+</span><span data-line="21">if [ ! -f &quot;$SBOX_PATH&quot; ]; then
+</span><span data-line="22">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} not found&quot;
+</span><span data-line="23">
+</span><span data-line="24">    wget --no-check-certificate -O $SBOX_PATH $SBOX_URL 
+</span><span data-line="25">    chmod +x $SBOX_PATH
+</span><span data-line="26">fi
+</span><span data-line="27">
+</span><span data-line="28"># not start
+</span><span data-line="29">if ! pgrep -f &quot;${SERVICE_NAME}&quot; &gt; /dev/null; then
+</span><span data-line="30">    wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
+</span><span data-line="31">    mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
+</span><span data-line="32">    echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} to start&quot; 
+</span><span data-line="33">    /etc/init.d/${SERVICE_NAME} start
+</span><span data-line="34">else
+</span><span data-line="35">    current_hour=$(date +%H)
+</span><span data-line="36">    if [ &quot;$current_hour&quot; -ge 1 ] &amp;&amp; [ &quot;$current_hour&quot; -lt 2 ]; then
+</span><span data-line="37">        echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} 1am and 2am, reload&quot; 
+</span><span data-line="38">        wget --no-check-certificate -O ${SBOX_CONFIG_PATH_NEW} $SBOX_CONFIG_URL
+</span><span data-line="39">        mv $SBOX_CONFIG_PATH_NEW $SBOX_CONFIG_PATH
+</span><span data-line="40">        echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - ${SERVICE_NAME} reload&quot; 
+</span><span data-line="41">        /etc/init.d/${SERVICE_NAME} reload
+</span><span data-line="42">    else
+</span><span data-line="43">        echo &quot;$(date &#39;+%Y-%m-%d %H:%M:%S&#39;) - Skipping&quot;
+</span><span data-line="44">    fi
+</span><span data-line="45">fi
+</span><span data-line="46">
 </span></pre></div>
 </div>
 <section id="id1">
@@ -325,7 +336,7 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
     <a href="dev.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>上一章</span><div class="title">How to include sbox</div></div>
+        <span>上一章</span><div class="title">逻辑</div></div>
     </a>
   </div></div></div>
     </div>
@@ -354,5 +365,5 @@ tmpfs是一种基于内存的虚拟文件系统,它最大的特点就是它的�
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
-      <script src="../_static/shibuya.js?v=55e26b35"></script></body>
+      <script src="../_static/shibuya.js?v=1d2088d1"></script></body>
 </html>
