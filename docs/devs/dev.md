@@ -1,6 +1,19 @@
 
 ## 逻辑
 
+开机启动 `/etc/rc.local`，主要包括 `/etc/frp-client/frp-client.sh`和`/etc/sbox/sbox_tproxy.sh`
+两个文件。
+
+也需要修改这两个文件即可。
+
+此外，也应该取消掉注释 
+
+```bash
+crontab -e
+
+```
+
+
 
 
 ## How to include sbox
