@@ -1,4 +1,9 @@
-# How to include sbox
+
+## 逻辑
+
+
+
+## How to include sbox
 
 鲁班的CPU是 MT7621AT+512M运存。
 官方的配置不包括, 需要自己编译。
